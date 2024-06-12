@@ -2599,7 +2599,10 @@ lib.escapeShellArgs (lib.concatMap (ext: [ "--ghc-opt" "-X${ext}" ]) hooks.ormol
           description = "Perl script to add indentation to LaTeX files.";
           types = [ "file" "tex" ];
           package = tools.latexindent;
-          entry = "${hooks.latexindent.package}/bin/latexindent ${hooks.latexindent.settings.flags}";
+          entry = builtins.toString (pkgs.writeShellScript "latexindent.sh" ''
+            export LC_ALL=C
+            ${hooks.latexindent.package}/bin/latexindent ${hooks.latexindent.settings.flags} $@
+          '');
         };
       lacheck =
         let
